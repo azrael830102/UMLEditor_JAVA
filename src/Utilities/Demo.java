@@ -12,7 +12,7 @@ import UMLEditorBody.Editor;
 public class Demo {
 
 	/**
-	 * Launch the application.
+	 * Launch the application
 	 */
 	public static void main(String[] args) {
 		URL config = ClassLoader.getSystemResource("log4j.properties");
