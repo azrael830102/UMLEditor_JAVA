@@ -2,6 +2,7 @@ package UMLComponent.Diagram;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.JTextField;
 
@@ -26,5 +27,11 @@ public class UseCaseDiag extends BasicDiagramObj{
 		this.setOpaque(false);
 		this.setBorder(null);
 		this.setSize(280, 100);
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }
