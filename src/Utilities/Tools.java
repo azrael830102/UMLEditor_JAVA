@@ -2,6 +2,9 @@ package Utilities;
 
 import javax.swing.ImageIcon;
 
+import UMLMode.Mode;
+import UMLMode.SelectMode;
+
 /**
  * This class is enum types of tools in tool box,
  * manage tool's attribute here 
@@ -48,7 +51,29 @@ public enum Tools {
 		default:
 			return null;
     	}
-    	
+    }
+    
+    public Mode getMode() {
+    	switch(this) {
+    	case SELECT:
+			return new SelectMode();
+		// Lines
+		case ASSOCIATION:
+			return null;
+		case COMPOSITION:
+			return null;
+		case GENERALIZATION:
+			return null;
+			
+		// Diagrams	
+		case CLASS:
+			return null;
+		case USE_CASE:
+			return null;
+			
+		default:
+			return null;
+    	}
     }
     
 }

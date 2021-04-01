@@ -8,6 +8,7 @@ import javax.swing.JToolBar;
 
 import org.apache.log4j.Logger;
 
+import UMLComponent.Canvas;
 import Utilities.CommonUse;
 
 @SuppressWarnings("serial")
@@ -15,7 +16,7 @@ public class Editor extends JFrame {
 
 	private static Logger logger = Logger.getLogger(Editor.class);
 	private JToolBar toolBar;
-	private JPanel canvas ;
+	private Canvas canvas ;
 	public Editor(boolean isVisible) {
 		getContentPane().setBackground(CommonUse.backgroundColor);
 		initialize(isVisible);
@@ -28,7 +29,7 @@ public class Editor extends JFrame {
 		
 		getContentPane().setLayout(new BorderLayout());
 		toolBar = new ToolBox();
-		canvas  = new JPanel();//TODO custom canvas needs to be done
+		canvas  = Canvas.getInstance();//TODO custom canvas needs to be done
 		getContentPane().add(new MenuBar(), BorderLayout.NORTH);
 		getContentPane().add(toolBar, BorderLayout.WEST);
 		getContentPane().add(canvas , BorderLayout.CENTER);

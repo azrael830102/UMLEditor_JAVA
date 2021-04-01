@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import UMLComponent.Canvas;
+import UMLMode.Mode;
 import Utilities.CommonUse;
 import Utilities.Tools;
 /**
@@ -16,9 +18,11 @@ import Utilities.Tools;
  * */
 @SuppressWarnings("serial")
 public class ToolBox extends JToolBar {
+	private Canvas canvas;
 	int toolsCnt = Tools.values().length;
 	private JButton selectedBtn = null;
 	public ToolBox() {
+		canvas = Canvas.getInstance();
 		setLayout(new GridLayout(toolsCnt, 1, 2, 2));
 		setRollover(true);
 		
@@ -28,9 +32,9 @@ public class ToolBox extends JToolBar {
 	}
 
 	private class ToolBtn extends JButton {
-		Tools selectedTool;
+		Mode currentMode;
 		ToolBtn(Tools tool){
-			selectedTool = tool;
+			this.currentMode = tool.getMode();
 			setToolTipText(tool.getToolsName());
 			setIcon(tool.getImage());
 			setFocusable(false);
@@ -46,6 +50,8 @@ public class ToolBox extends JToolBar {
 					selectedBtn.setBackground(CommonUse.backgroundColor);
 				selectedBtn = (JButton) e.getSource();
 				selectedBtn.setBackground(CommonUse.focusColor);
+				canvas.setCurrentTool(currentMode);
+				
 			}
 		}
 	}
