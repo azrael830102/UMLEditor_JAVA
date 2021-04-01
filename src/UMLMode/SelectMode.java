@@ -7,8 +7,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import UMLComponent.BasicObject;
+import Utilities.MouseEventListener;
 
-public class SelectMode extends Mode {
+public class SelectMode extends MouseEventListener {
 	private Point startPoint;
 	private List<BasicObject> basicObjList;
 	Logger logger = Logger.getLogger(SelectMode.class);

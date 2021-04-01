@@ -1,4 +1,4 @@
-package UMLMode;
+package Utilities;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -6,7 +6,7 @@ import java.awt.event.MouseMotionListener;
 
 import UMLComponent.Canvas;
 
-public abstract class Mode implements MouseListener, MouseMotionListener {
+public abstract class MouseEventListener implements MouseListener, MouseMotionListener {
 	protected Canvas canvas = Canvas.getInstance();   // Canvas is singleton 
 	
 	public void mousePressed(MouseEvent e) {

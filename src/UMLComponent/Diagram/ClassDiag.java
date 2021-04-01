@@ -2,6 +2,7 @@ package UMLComponent.Diagram;
 
 import java.awt.Graphics;
 
+@SuppressWarnings("serial")
 public class ClassDiag extends BasicDiagramObj{
 
 	@Override
@@ -9,5 +10,7 @@ public class ClassDiag extends BasicDiagramObj{
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }

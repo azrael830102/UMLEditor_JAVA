@@ -6,29 +6,27 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import UMLMode.Mode;
 import Utilities.CommonUse;
+import Utilities.MouseEventListener;
 
 
 
 @SuppressWarnings("serial")
 public class Canvas extends JPanel {
 	private static Canvas instance = null;
-	protected Mode currentMode = null;
+	protected MouseEventListener currentMode = null;
 	
 	public Rectangle selectedArea = new Rectangle();
 	private List<BasicObject> basicObjList = new ArrayList<BasicObject>();
 
 	private Canvas() {
-		// Exists only to defeat instantiation.
+		this.setLayout(null);
+		this.setPreferredSize(new Dimension(1920, 1080));
 	}
 
 	public static Canvas getInstance() {
@@ -41,16 +39,16 @@ public class Canvas extends JPanel {
 	public void reset() {
 		selectedArea.setBounds(0, 0, 0, 0);
 	}
-	public Mode getCurrentTool() {
+	public MouseEventListener getCurrentTool() {
 		return currentMode;
 	}
 
-	public void setCurrentTool(Mode mode) {
-		removeMouseListener((MouseListener) currentMode);
-		removeMouseMotionListener((MouseMotionListener) currentMode);
+	public void setCurrentTool(MouseEventListener mode) {
+		removeMouseListener(currentMode);
+		removeMouseMotionListener(currentMode);
 		this.currentMode = mode;
-		addMouseListener((MouseListener) currentMode);
-		addMouseMotionListener((MouseMotionListener) currentMode);		
+		addMouseListener(currentMode);
+		addMouseMotionListener(currentMode);		
 	}
 	
 	public void addObject(BasicObject obj) {
@@ -60,7 +58,9 @@ public class Canvas extends JPanel {
 		return this.basicObjList;
 	}
 	
+	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		/* set canvas area */
 		Dimension dim = getSize();
 		g.setColor(CommonUse.backgroundColor);
@@ -70,6 +70,11 @@ public class Canvas extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
 		
+		if(!basicObjList.isEmpty()) {
+			for(BasicObject obj : basicObjList) {
+				obj.draw(g);
+			}
+		}
 		if (!selectedArea.isEmpty()) {
 			int alpha = 85; // 33% transparent
 			g.setColor(new Color(37, 148, 216, alpha));

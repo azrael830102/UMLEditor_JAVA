@@ -2,8 +2,8 @@ package Utilities;
 
 import javax.swing.ImageIcon;
 
-import UMLMode.Mode;
 import UMLMode.SelectMode;
+import UMLMode.UseCaseMode;
 
 /**
  * This class is enum types of tools in tool box,
@@ -53,7 +53,7 @@ public enum Tools {
     	}
     }
     
-    public Mode getMode() {
+    public MouseEventListener getMode() {
     	switch(this) {
     	case SELECT:
 			return new SelectMode();
@@ -69,7 +69,7 @@ public enum Tools {
 		case CLASS:
 			return null;
 		case USE_CASE:
-			return null;
+			return new UseCaseMode();
 			
 		default:
 			return null;
