@@ -79,9 +79,12 @@ public class Canvas extends JPanel {
 			}
 		}
 		if (!selectedArea.isEmpty()) {
-			int alpha = 85; // 33% transparent
-			g.setColor(new Color(37, 148, 216, alpha));
-			g.fillRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
+			g.setColor(CommonUse.SELECTED_AREA_COLOR);
+			Graphics2D g2d = (Graphics2D) g;
+			float dash[] = { 5.0f };
+			g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+			g2d.drawRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
+			g2d.setColor(Color.BLACK);
 		}
 	}
 

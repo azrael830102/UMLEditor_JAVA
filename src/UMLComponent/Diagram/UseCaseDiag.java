@@ -21,7 +21,7 @@ public class UseCaseDiag extends BasicDiagramObj {
 		this.setLayout(null);
 		this.setOpaque(false);
 		this.setBorder(null);
-		this.setSize(280, 100);
+		this.setSize(180, 65);
 		
 		
 		createPorts();
@@ -30,18 +30,19 @@ public class UseCaseDiag extends BasicDiagramObj {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
 		g.setColor(CommonUse.DIAGRAM_BACKGROUND_COLOR);
 		g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
 		Graphics2D g2d = (Graphics2D) g;
 		float dash[] = { 10.0f };
-		g2d.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-		g2d.setColor(Color.ORANGE);
+		g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+		g2d.setColor(Color.black);
 		g2d.drawOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		
 		g.setColor(Color.BLACK);
 		
-		drawCenteredString(g, getName(), new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight()));
+		
+		Rectangle tmpRect = new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		drawCenteredString(g, getName(), false, tmpRect);
 	}
 }

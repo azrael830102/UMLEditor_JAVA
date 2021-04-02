@@ -89,25 +89,31 @@ public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 		}
 	}
 	
+	@Override
 	public void resetLocation(int moveX, int moveY) {
 		this.setLocation(getX() + moveX, getY() + moveY);
 		createPorts();
 	}
 	
+	@Override
 	public void rename(String newName) {
 		setName(newName);
 		//setDiagName(newName);
 	}
-	protected void drawCenteredString(Graphics g, String text, Rectangle rect) {
+	protected void drawCenteredString(Graphics g, String text, boolean showRect, Rectangle rect) {
 		FontMetrics metrics = g.getFontMetrics(CommonUse.DIAGRAM_NAME_FONT);
 		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
 		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 		g.setFont(CommonUse.DIAGRAM_NAME_FONT);
 		g.drawString(text, x, y);
+		if(showRect) {
+			g.drawRect(rect.x, rect.y, rect.width, rect.height);
+		}
 	}
 
 	private void showPorts(Graphics g) {
 		for (int i = 0; i < ports.length; i++) {
+			g.setColor(Color.DARK_GRAY);
 			g.fillRect(ports[i].x, ports[i].y, ports[i].width, ports[i].height);
 		}
 	}

@@ -2,6 +2,7 @@ package UMLEditorBody.ToolBox;
 
 import javax.swing.ImageIcon;
 
+import UMLMode.ClassDiagMode;
 import UMLMode.SelectMode;
 import UMLMode.UseCaseMode;
 import Utilities.MouseEventListener;
@@ -68,7 +69,7 @@ public enum Tools {
 			
 		// Diagrams	
 		case CLASS:
-			return null;
+			return new ClassDiagMode();
 		case USE_CASE:
 			return new UseCaseMode();
 			
