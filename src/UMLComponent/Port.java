@@ -8,13 +8,14 @@ import UMLComponent.Line.BasicLineObj;
 
 @SuppressWarnings("serial")
 public class Port extends Rectangle{
+	private static final int OFFSET = 5;
 	private List<BasicLineObj> lines = new ArrayList<BasicLineObj>(); 
 
-	public void setPort(int center_x, int center_y, int offset) {
-		int x = center_x - offset;
-		int y = center_y - offset;
-		int w = offset * 2;
-		int h = offset * 2;
+	public void setPort(int center_x, int center_y) {
+		int x = center_x - OFFSET;
+		int y = center_y - OFFSET;
+		int w = OFFSET * 2;
+		int h = OFFSET * 2;
 		setBounds(x, y, w, h);
 	}
 	public void addLine(BasicLineObj line) {
@@ -26,6 +27,6 @@ public class Port extends Rectangle{
 	}
 	
 	public void resetLines() {
-		
+		// TODO reconnect line to obj
 	}
 }

@@ -14,13 +14,11 @@ import javax.swing.JPanel;
 import Utilities.CommonUse;
 import Utilities.MouseEventListener;
 
-
-
 @SuppressWarnings("serial")
 public class Canvas extends JPanel {
 	private static Canvas instance = null;
 	protected MouseEventListener currentMode = null;
-	
+
 	public Rectangle selectedArea = new Rectangle();
 	private List<BasicObject> basicObjList = new ArrayList<BasicObject>();
 
@@ -35,10 +33,14 @@ public class Canvas extends JPanel {
 		}
 		return instance;
 	}
-	
+
 	public void reset() {
 		selectedArea.setBounds(0, 0, 0, 0);
+		for (BasicObject obj : basicObjList) {
+			obj.setSlected(false);
+		}
 	}
+
 	public MouseEventListener getCurrentTool() {
 		return currentMode;
 	}
@@ -48,31 +50,32 @@ public class Canvas extends JPanel {
 		removeMouseMotionListener(currentMode);
 		this.currentMode = mode;
 		addMouseListener(currentMode);
-		addMouseMotionListener(currentMode);		
+		addMouseMotionListener(currentMode);
 	}
-	
+
 	public void addObject(BasicObject obj) {
 		this.basicObjList.add(obj);
 	}
-	public List<BasicObject> getBasicObjList(){
+
+	public List<BasicObject> getBasicObjList() {
 		return this.basicObjList;
 	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 		/* set canvas area */
 		Dimension dim = getSize();
-		g.setColor(CommonUse.backgroundColor);
+		g.setColor(CommonUse.BACKGROUND_COLOR);
 		g.fillRect(0, 0, dim.width, dim.height);
 		/* set painting color */
 		g.setColor(Color.white);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
-		
-		if(!basicObjList.isEmpty()) {
-			for(BasicObject obj : basicObjList) {
-				obj.draw(g);
+
+		if (!basicObjList.isEmpty()) {
+			for (BasicObject obj : basicObjList) {
+				obj.paint(g);
 			}
 		}
 		if (!selectedArea.isEmpty()) {
@@ -81,5 +84,5 @@ public class Canvas extends JPanel {
 			g.fillRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
 		}
 	}
-	
+
 }

@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class ClassDiag extends BasicDiagramObj{
 
 	@Override
-	public void draw(Graphics g) {
+	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}

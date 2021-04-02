@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class CommonUse {
-	public static final Color backgroundColor = Color.LIGHT_GRAY;
-	public static final Color focusColor = new Color(102, 255, 255);
-	public static final Font DiagramNameTagFont = new Font("Comic Sans MS", Font.BOLD, 18);
+	public static final Color BACKGROUND_COLOR = Color.LIGHT_GRAY;
+	public static final Color FOCUS_COLOR = new Color(102, 255, 255);
+	public static final Color DIAGRAM_BACKGROUND_COLOR = new Color(245, 255, 250);
+	
+	public static final Font DIAGRAM_NAME_FONT = new Font("Comic Sans MS", Font.BOLD, 18);
 }

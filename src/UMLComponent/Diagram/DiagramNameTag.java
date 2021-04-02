@@ -5,18 +5,19 @@ import java.awt.Color;
 import javax.swing.JTextField;
 
 import Utilities.CommonUse;
-
+/**
+ * Not using for now
+ * */
 @SuppressWarnings("serial")
 public class DiagramNameTag extends JTextField {
 	public DiagramNameTag() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public DiagramNameTag(String name) {
 		super(name);
 		
 		setBackground(new Color(255, 255, 185));
-		setFont(CommonUse.DiagramNameTagFont);
+		setFont(CommonUse.DIAGRAM_NAME_FONT);
 		setHorizontalAlignment(JTextField.CENTER);
 		setEditable(false);
 		setOpaque(false);

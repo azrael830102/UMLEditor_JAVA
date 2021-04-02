@@ -18,12 +18,11 @@ public class UseCaseMode extends MouseEventListener{
 		Object source = e.getSource();
 		if (source == canvas) {
 			Point p = e.getPoint();
-			BasicDiagramObj us = new UseCaseDiag();
+			BasicDiagramObj us = new UseCaseDiag(p);
+
 			
-			us.setLocation(p);
 			canvas.addObject(us);
 			canvas.add(us);
-			logger.debug(canvas.getBasicObjList().size());
 			
 			canvas.revalidate();
 			canvas.repaint();
