@@ -2,6 +2,7 @@ package UMLMode;
 
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -13,14 +14,16 @@ import Utilities.MouseEventListener;
 public class SelectMode extends MouseEventListener {
 	private boolean dragable = false;
 	private Point startPoint;
+	Rectangle tmpSelectedArea = null;
 	private List<BasicObject> basicObjList;
 	Logger logger = Logger.getLogger(SelectMode.class);
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		startPoint = e.getPoint();
 		basicObjList = canvas.getBasicObjList();
 		// reset
-		if (!canvas.selectedArea.contains(startPoint)) {
+		if (tmpSelectedArea != null && !tmpSelectedArea.contains(startPoint)) {
 			canvas.reset();
 		}
 
@@ -31,26 +34,27 @@ public class SelectMode extends MouseEventListener {
 			}
 		}
 		dragable = false;
-		
+
 		for (BasicObject obj : basicObjList) {
 			if (obj.isSlected()) {
 				dragable = true;
-			} 
+			}
 		}
 
 		canvas.repaint();
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		int moveX = e.getX() - startPoint.x;
 		int moveY = e.getY() - startPoint.y;
 		if (dragable) {
 			for (BasicObject obj : basicObjList) {
-				if(obj.isSlected())
+				if (obj.isSlected())
 					obj.resetLocation(moveX, moveY);
 			}
 			canvas.selectedArea.setLocation((int) (canvas.selectedArea.getX() + moveX),
-						(int) (canvas.selectedArea.getY() + moveY));
+					(int) (canvas.selectedArea.getY() + moveY));
 
 			startPoint.x = e.getX();
 			startPoint.y = e.getY();
@@ -71,14 +75,40 @@ public class SelectMode extends MouseEventListener {
 		canvas.repaint();
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
-//		canvas.selectedArea.setBounds(0, 0, 0, 0);
+//		
 		if (dragable) {
 			// TODO Line reconnect
 		} else {
 			canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
+			tmpSelectedArea = resizeSelectedItemCoverage();
+			canvas.selectedArea.setBounds(0, 0, 0, 0);
 		}
 		canvas.repaint();
+	}
+
+	private Rectangle resizeSelectedItemCoverage() {
+		int leftX = Integer.MAX_VALUE, rightX = Integer.MIN_VALUE;
+		int upY = Integer.MAX_VALUE, bottomY = Integer.MIN_VALUE;
+		
+		for (BasicObject obj : canvas.getBasicObjList()) {
+			if (obj.isSlected()) {
+				if (obj.getX1() < leftX) {
+					leftX = obj.getX1();
+				}
+				if (obj.getX2() > rightX) {
+					rightX = obj.getX2();
+				}
+				if (obj.getY1() < upY) {
+					upY = obj.getY1();
+				}
+				if (obj.getY2() > bottomY) {
+					bottomY = obj.getY2();
+				}
+			}
+		}
+		return new Rectangle(leftX, upY, Math.abs(leftX - rightX), Math.abs(upY - bottomY));
 	}
 
 	private boolean checkSelected(Point p, BasicObject obj) {
