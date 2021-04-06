@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import UMLComponent.BasicObject;
 import UMLComponent.Canvas;
+import UMLComponent.Diagram.BasicDiagramObj;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -65,17 +66,17 @@ public class MenuBar extends JMenuBar {
 		}
 
 		private void rename() {
-			BasicObject selectedObj = null;
+			BasicDiagramObj selectedObj = null;
 			int selectedItemCnt = 0;
 			for (BasicObject obj : canvas.getBasicObjList()) {
-				if (obj.isSlected()) {
+				if (obj.isSlected() && obj.isDiagram()) {
 					selectedItemCnt++;
-					selectedObj = obj;
+					selectedObj = (BasicDiagramObj)obj;
 				}
 			}
 			switch (selectedItemCnt) {
 			case 0:
-				new RenameAlertMsgBox("No selected!");
+				new RenameAlertMsgBox("Please select a diagram!");
 				break;
 			case 1:
 				new RenameMsgBox(selectedObj);
@@ -88,7 +89,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	class RenameMsgBox extends JFrame {
-		public RenameMsgBox(BasicObject selectedObj) {
+		public RenameMsgBox(BasicDiagramObj selectedObj) {
 			super("Change Object Name");
 			setSize(400, 100);
 			getContentPane().setLayout(new GridLayout(0, 1));
@@ -114,6 +115,7 @@ public class MenuBar extends JMenuBar {
 			setLocationRelativeTo(null);
 			setVisible(true);
 			confirm.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					selectedObj.rename(Text.getText());
 					canvas.repaint();
@@ -122,6 +124,7 @@ public class MenuBar extends JMenuBar {
 			});
 
 			cancel.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
 				}
@@ -154,6 +157,7 @@ public class MenuBar extends JMenuBar {
 			setVisible(true);
 
 			btn_ok.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
 				}

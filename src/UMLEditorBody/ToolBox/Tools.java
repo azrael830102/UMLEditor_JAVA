@@ -2,7 +2,10 @@ package UMLEditorBody.ToolBox;
 
 import javax.swing.ImageIcon;
 
+import UMLMode.AssociationLineMode;
 import UMLMode.ClassDiagMode;
+import UMLMode.CompositionLineMode;
+import UMLMode.GeneralizationLineMode;
 import UMLMode.SelectMode;
 import UMLMode.UseCaseMode;
 import Utilities.MouseEventListener;
@@ -59,13 +62,14 @@ public enum Tools {
     	switch(this) {
     	case SELECT:
 			return new SelectMode();
+			
 		// Lines
 		case ASSOCIATION:
-			return null;
+			return new AssociationLineMode();
 		case COMPOSITION:
-			return null;
+			return new CompositionLineMode();
 		case GENERALIZATION:
-			return null;
+			return new GeneralizationLineMode();
 			
 		// Diagrams	
 		case CLASS:

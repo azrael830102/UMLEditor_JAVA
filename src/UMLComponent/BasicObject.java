@@ -1,6 +1,7 @@
 package UMLComponent;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 public interface BasicObject {
 	
@@ -11,8 +12,10 @@ public interface BasicObject {
 	public abstract int getX2();
 	public abstract int getY1();
 	public abstract int getY2();
+	public abstract boolean isDiagram();
 	public abstract void resetLocation(int moveX, int moveY);
+
+	public abstract Port getPort(int portCode);
 	
-	public abstract String getName();
-	public abstract void rename(String newName);
+	public abstract boolean checkSelected(Point p);
 }

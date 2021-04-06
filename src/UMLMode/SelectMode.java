@@ -1,7 +1,6 @@
 package UMLMode;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -9,12 +8,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import UMLComponent.BasicObject;
+import UMLComponent.Port;
+import UMLComponent.Line.BasicLineObj;
 import Utilities.MouseEventListener;
 
 public class SelectMode extends MouseEventListener {
-	private boolean dragable = false;
+	private boolean draggable = false;
 	private Point startPoint;
-	Rectangle tmpSelectedArea = null;
+	Rectangle tmpSelectedArea = new Rectangle();
 	private List<BasicObject> basicObjList;
 	Logger logger = Logger.getLogger(SelectMode.class);
 
@@ -22,25 +23,30 @@ public class SelectMode extends MouseEventListener {
 	public void mousePressed(MouseEvent e) {
 		startPoint = e.getPoint();
 		basicObjList = canvas.getBasicObjList();
-		// reset
+		// reset the canvas; If mouse is pressed on the selectArea, don't reset(for
+		// dragging items)
 		if (tmpSelectedArea != null && !tmpSelectedArea.contains(startPoint)) {
 			canvas.reset();
+			tmpSelectedArea = canvas.selectedArea.getBounds();
 		}
 
+		// see is any item is selected
 		for (int i = basicObjList.size() - 1; i >= 0; i--) {
-			if (checkSelected(startPoint, basicObjList.get(i))) {
+			if (basicObjList.get(i).checkSelected(startPoint)) {
 				basicObjList.get(i).setSlected(true);
 				break;
 			}
 		}
-		dragable = false;
 
+		// check is any item is selected draggable or not
+		draggable = false;
 		for (BasicObject obj : basicObjList) {
 			if (obj.isSlected()) {
-				dragable = true;
+				draggable = true;
 			}
 		}
 
+		// repaint the canvas
 		canvas.repaint();
 	}
 
@@ -48,10 +54,20 @@ public class SelectMode extends MouseEventListener {
 	public void mouseDragged(MouseEvent e) {
 		int moveX = e.getX() - startPoint.x;
 		int moveY = e.getY() - startPoint.y;
-		if (dragable) {
+		if (draggable) {
+			// if draggable flag is on then it's drag mode.
 			for (BasicObject obj : basicObjList) {
-				if (obj.isSlected())
-					obj.resetLocation(moveX, moveY);
+				if (obj.isSlected()) {
+					if (obj.isDiagram()) {
+						obj.resetLocation(moveX, moveY);
+					} else {
+						if (tmpSelectedArea.isEmpty() /*&& !obj.isDiagram()*/) {
+							((BasicLineObj) obj).resetStartEnd(e.getPoint());
+						} else {
+							obj.resetLocation(moveX, moveY);
+						}
+					}
+				}
 			}
 			canvas.selectedArea.setLocation((int) (canvas.selectedArea.getX() + moveX),
 					(int) (canvas.selectedArea.getY() + moveY));
@@ -77,21 +93,42 @@ public class SelectMode extends MouseEventListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-//		
-		if (dragable) {
-			// TODO Line reconnect
-		} else {
-			canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
+		if (draggable) {
+			if (tmpSelectedArea.isEmpty()) {
+				// reset the port relation which is pointed by the selected Line
+				resetLinePortRelation(e.getPoint());
+			}
+		}
+
+		// let select area invisible, so the canvas is clean
+		canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
+		if(!canvas.selectedArea.isEmpty()) {
 			tmpSelectedArea = resizeSelectedItemCoverage();
 			canvas.selectedArea.setBounds(0, 0, 0, 0);
 		}
 		canvas.repaint();
 	}
 
+	private void resetLinePortRelation(Point p) {
+		for (BasicObject obj : basicObjList) {
+			if (obj.isSlected() && !obj.isDiagram()) {
+				// Line
+				BasicLineObj basicLine = (BasicLineObj) obj;
+				for (BasicObject basicObj : basicObjList) {
+					if (basicObj.isDiagram() && basicObj.checkSelected(p)) {
+						Port targetPort = basicObj.getPort(getTargetPortToConnect(p, basicObj).getPortCode());
+						basicLine.resetPort(targetPort);
+						basicLine.resetLocation();
+					}
+				}
+			}
+		}
+	}
+
 	private Rectangle resizeSelectedItemCoverage() {
 		int leftX = Integer.MAX_VALUE, rightX = Integer.MIN_VALUE;
 		int upY = Integer.MAX_VALUE, bottomY = Integer.MIN_VALUE;
-		
+
 		for (BasicObject obj : canvas.getBasicObjList()) {
 			if (obj.isSlected()) {
 				if (obj.getX1() < leftX) {
@@ -111,31 +148,8 @@ public class SelectMode extends MouseEventListener {
 		return new Rectangle(leftX, upY, Math.abs(leftX - rightX), Math.abs(upY - bottomY));
 	}
 
-	private boolean checkSelected(Point p, BasicObject obj) {
-		int x1 = obj.getX1();
-		int x2 = obj.getX2();
-		int y1 = obj.getY1();
-		int y2 = obj.getY2();
-		Point center = new Point();
-		center.x = (x1 + x2) / 2;
-		center.y = (y1 + y2) / 2;
-		Point[] points = { new Point(x1, y1), new Point(x2, y1), new Point(x2, y2), new Point(x1, y2) };
-
-		for (int i = 0; i < points.length; i++) {
-			Polygon t = new Polygon();
-			// (0,1,center) (1,2,center) (2,3,center) (3,0,center)
-			int secondIndex = ((i + 1) % 4);
-			t.addPoint(points[i].x, points[i].y);
-			t.addPoint(points[secondIndex].x, points[secondIndex].y);
-			t.addPoint(center.x, center.y);
-			if (t.contains(p)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private boolean checkSelectedArea(BasicObject obj) {
+		// If basic object is in the select area, set the object selected
 		Point upperleft = new Point(obj.getX1(), obj.getY1());
 		Point lowerright = new Point(obj.getX2(), obj.getY2());
 		/* show ports of selected objects */

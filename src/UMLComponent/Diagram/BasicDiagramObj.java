@@ -3,6 +3,8 @@ package UMLComponent.Diagram;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
@@ -15,8 +17,7 @@ import Utilities.CommonUse;
 public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 
 	private boolean isSlected = false;
-//	private String diagName;
-	protected Port[] ports = new Port[4]; // Up, Down, Left, Right
+	protected Port[] ports; //  north|east|south|west port (for now)
 
 	public BasicDiagramObj() {
 		this.setSize(180, 180);
@@ -24,24 +25,12 @@ public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 	}
 
 	protected void createPorts() {
-		int[] xpoint = { getX() + getWidth() / 2, // Up
-				getX() + getWidth(), // Right
-				getX() + getWidth() / 2, // Down
-				getX() // Left
-		};
-		int[] ypoint = { getY(), // Up
-				getY() + getHeight() / 2, // Right
-				getY() + getHeight(), // Down
-				getY() + getHeight() / 2 // Left
-		};
-
-		for (int i = 0; i < ports.length; i++) {
-			Port port = new Port();
-			port.setPort(xpoint[i], ypoint[i]);
-			ports[i] = port;
-		}
+		ports = Port.createPorts(this);
 	}
-
+	@Override
+	public boolean isDiagram() {
+		return true;
+	}
 	@Override
 	public boolean isSlected() {
 		return isSlected;
@@ -51,15 +40,6 @@ public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 	public void setSlected(boolean isSelected) {
 		this.isSlected = isSelected;
 	}
-
-//	public String getDiagName() {
-//		return diagName;
-//	}
-//
-//	public void setDiagName(String diagName) {
-//		this.diagName = diagName;
-//		setName(getDiagName());
-//	}
 
 	@Override
 	public int getX1() {
@@ -92,22 +72,58 @@ public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 	@Override
 	public void resetLocation(int moveX, int moveY) {
 		this.setLocation(getX() + moveX, getY() + moveY);
-		createPorts();
+//		createPorts();
+		for(Port port : ports) {
+			port.x += moveX;
+			port.y += moveY;
+			port.resetLines();
+		}
+	}
+	@Override
+	public Port getPort(int portCode) {
+		return ports[portCode];
+	}
+	public void rename(String newName) {
+		setName(newName);
 	}
 	
 	@Override
-	public void rename(String newName) {
-		setName(newName);
-		//setDiagName(newName);
+	public boolean checkSelected(Point p) {
+		// check current mouse location is on this object or not
+		int x1 = getX1();
+		int x2 = getX2();
+		int y1 = getY1();
+		int y2 = getY2();
+		Point center = new Point();
+		center.x = (x1 + x2) / 2;
+		center.y = (y1 + y2) / 2;
+		Point[] points = { new Point(x1, y1), new Point(x2, y1), new Point(x2, y2), new Point(x1, y2) };
+
+		for (int i = 0; i < points.length; i++) {
+			Polygon t = new Polygon();
+			// (0,1,center) (1,2,center) (2,3,center) (3,0,center)
+			int secondIndex = ((i + 1) % 4);
+			t.addPoint(points[i].x, points[i].y);
+			t.addPoint(points[secondIndex].x, points[secondIndex].y);
+			t.addPoint(center.x, center.y);
+			if (t.contains(p)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	protected void drawCenteredString(Graphics g, String text, boolean showRect, Rectangle rect) {
+	
+	/**
+	 * Consider to the different Font effect, so the String can be at the center of the object
+	 * */
+	protected void drawCenteredString(Graphics g, String text, boolean showStringRect, Rectangle stringRect) {
 		FontMetrics metrics = g.getFontMetrics(CommonUse.DIAGRAM_NAME_FONT);
-		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+		int x = stringRect.x + (stringRect.width - metrics.stringWidth(text)) / 2;
+		int y = stringRect.y + ((stringRect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 		g.setFont(CommonUse.DIAGRAM_NAME_FONT);
 		g.drawString(text, x, y);
-		if(showRect) {
-			g.drawRect(rect.x, rect.y, rect.width, rect.height);
+		if(showStringRect) {
+			g.drawRect(stringRect.x, stringRect.y, stringRect.width, stringRect.height);
 		}
 	}
 

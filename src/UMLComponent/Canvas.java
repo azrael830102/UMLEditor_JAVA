@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import UMLComponent.Line.BasicLineObj;
 import Utilities.CommonUse;
 import Utilities.MouseEventListener;
 
@@ -18,10 +19,11 @@ import Utilities.MouseEventListener;
 public class Canvas extends JPanel {
 	private static Canvas instance = null;
 	protected MouseEventListener currentMode = null;
-
+	
+	public BasicLineObj tempLine = null;
 	public Rectangle selectedArea = new Rectangle();
 	private List<BasicObject> basicObjList = new ArrayList<BasicObject>();
-
+	
 	private Canvas() {
 		this.setLayout(null);
 		this.setPreferredSize(new Dimension(1920, 1080));
@@ -72,7 +74,10 @@ public class Canvas extends JPanel {
 		g.setColor(Color.white);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
-
+		
+		if(tempLine != null) {
+			tempLine.paint(g);
+		}
 		if (!basicObjList.isEmpty()) {
 			for (BasicObject obj : basicObjList) {
 				obj.paint(g);
