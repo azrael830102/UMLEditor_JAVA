@@ -14,9 +14,7 @@ public class AssociationLine extends BasicLineObj {
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		setLineColor(g);
-		drawBasicLine(g);
+	protected void drawArrowhead(Graphics g) {
 		Point[] arrowheadVertices = getArrowheadVertices();
 		for (Point p : arrowheadVertices) {
 			g.drawLine(p.x, p.y, x2, y2);

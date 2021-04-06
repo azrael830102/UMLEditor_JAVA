@@ -14,11 +14,9 @@ public class GeneralizationLine extends BasicLineObj {
 	public GeneralizationLine(int x1, int y1, int x2, int y2) {
 		super(new Point(x1, y1), new Point(x2, y2));
 	}
-
+	
 	@Override
-	public void paint(Graphics g) {
-		setLineColor(g);
-		drawBasicLine(g);
+	protected void drawArrowhead(Graphics g) {
 		Point[] arrowheadVertices = getArrowheadVertices();
 		Polygon polygon = new Polygon();
 		for (Point p : arrowheadVertices) {

@@ -120,9 +120,15 @@ public class BasicLineObj implements BasicObject {
 
 	@Override
 	public void paint(Graphics g) {
+		setLineColor(g);
 		drawBasicLine(g);
+		drawArrowhead(g);
 	}
 	
+	/**
+	 * Need to be implemented to fit the arrow style
+	 * */
+	protected void drawArrowhead(Graphics g) {};
 	
 	/**
 	 * <pre>

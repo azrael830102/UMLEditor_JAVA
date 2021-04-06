@@ -16,9 +16,7 @@ public class CompositionLine extends BasicLineObj {
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		setLineColor(g);
-		drawBasicLine(g);
+	protected void drawArrowhead(Graphics g) {
 
 		g.setColor(Color.BLACK);
 		int x_sum = 0, y_sum = 0;

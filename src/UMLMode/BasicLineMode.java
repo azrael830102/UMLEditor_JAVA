@@ -36,6 +36,9 @@ public abstract class BasicLineMode extends MouseEventListener{
 		
 		canvas.addObject(line);
 	}	
+	/**
+	 * Don't use it indiscriminately
+	 * */
 	protected void resetForMouseReleasedEvent() {
 		canvas.tempLine = null;
 		canvas.repaint();
