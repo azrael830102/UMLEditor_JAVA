@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 import org.apache.log4j.Logger;
 
 import UMLComponent.BasicObject;
+import UMLComponent.BasicObject.ComponentType;
 import UMLComponent.Canvas;
 import UMLComponent.Diagram.BasicDiagramObj;
 
@@ -57,9 +58,11 @@ public class MenuBar extends JMenuBar {
 				break;
 			case GROUP:
 				logger.debug("Group");
+				canvas.grouping();
 				break;
 			case UNGROUP:
 				logger.debug("Ungroup");
+				canvas.unGrouping();
 				break;
 			}
 
@@ -69,7 +72,7 @@ public class MenuBar extends JMenuBar {
 			BasicDiagramObj selectedObj = null;
 			int selectedItemCnt = 0;
 			for (BasicObject obj : canvas.getBasicObjList()) {
-				if (obj.isSlected() && obj.isDiagram()) {
+				if (obj.isSlected() && obj.getComponentType().equals(ComponentType.DIAGRAM)) {
 					selectedItemCnt++;
 					selectedObj = (BasicDiagramObj)obj;
 				}

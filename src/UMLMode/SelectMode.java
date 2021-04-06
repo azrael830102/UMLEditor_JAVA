@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import UMLComponent.BasicObject;
+import UMLComponent.BasicObject.ComponentType;
 import UMLComponent.Port;
 import UMLComponent.Line.BasicLineObj;
 import Utilities.MouseEventListener;
@@ -58,20 +59,16 @@ public class SelectMode extends MouseEventListener {
 			// if draggable flag is on then it's drag mode.
 			for (BasicObject obj : basicObjList) {
 				if (obj.isSlected()) {
-					if (obj.isDiagram()) {
-						obj.resetLocation(moveX, moveY);
+					if (tmpSelectedArea.isEmpty() && obj.getComponentType().equals(ComponentType.LINE)) {
+						((BasicLineObj) obj).resetStartEnd(e.getPoint());
 					} else {
-						if (tmpSelectedArea.isEmpty() /*&& !obj.isDiagram()*/) {
-							((BasicLineObj) obj).resetStartEnd(e.getPoint());
-						} else {
-							obj.resetLocation(moveX, moveY);
-						}
+						obj.resetLocation(moveX, moveY);
+						tmpSelectedArea = getSelectedItemCoverage();
 					}
 				}
 			}
 			canvas.selectedArea.setLocation((int) (canvas.selectedArea.getX() + moveX),
 					(int) (canvas.selectedArea.getY() + moveY));
-
 			startPoint.x = e.getX();
 			startPoint.y = e.getY();
 		} else {
@@ -103,7 +100,7 @@ public class SelectMode extends MouseEventListener {
 		// let select area invisible, so the canvas is clean
 		canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
 		if(!canvas.selectedArea.isEmpty()) {
-			tmpSelectedArea = resizeSelectedItemCoverage();
+			tmpSelectedArea = getSelectedItemCoverage();
 			canvas.selectedArea.setBounds(0, 0, 0, 0);
 		}
 		canvas.repaint();
@@ -111,11 +108,11 @@ public class SelectMode extends MouseEventListener {
 
 	private void resetLinePortRelation(Point p) {
 		for (BasicObject obj : basicObjList) {
-			if (obj.isSlected() && !obj.isDiagram()) {
+			if (obj.isSlected() && obj.getComponentType().equals(ComponentType.LINE)) {
 				// Line
 				BasicLineObj basicLine = (BasicLineObj) obj;
 				for (BasicObject basicObj : basicObjList) {
-					if (basicObj.isDiagram() && basicObj.checkSelected(p)) {
+					if (basicObj.getComponentType().equals(ComponentType.DIAGRAM) && basicObj.checkSelected(p)) {
 						Port targetPort = basicObj.getPort(getTargetPortToConnect(p, basicObj).getPortCode());
 						basicLine.resetPort(targetPort);
 						basicLine.resetLocation();
@@ -125,7 +122,7 @@ public class SelectMode extends MouseEventListener {
 		}
 	}
 
-	private Rectangle resizeSelectedItemCoverage() {
+	private Rectangle getSelectedItemCoverage() {
 		int leftX = Integer.MAX_VALUE, rightX = Integer.MIN_VALUE;
 		int upY = Integer.MAX_VALUE, bottomY = Integer.MIN_VALUE;
 

@@ -23,8 +23,8 @@ public class BasicLineObj implements BasicObject {
 
 	}
 	@Override
-	public boolean isDiagram() {
-		return false;
+	public ComponentType getComponentType() {
+		return ComponentType.LINE;
 	}
 
 	@Override

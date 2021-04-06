@@ -12,10 +12,15 @@ public interface BasicObject {
 	public abstract int getX2();
 	public abstract int getY1();
 	public abstract int getY2();
-	public abstract boolean isDiagram();
+	
+	public abstract ComponentType getComponentType();
 	public abstract void resetLocation(int moveX, int moveY);
 
 	public abstract Port getPort(int portCode);
 	
 	public abstract boolean checkSelected(Point p);
+	
+	public enum ComponentType{
+		DIAGRAM, LINE, GROUP_CONTAINER;
+	}
 }

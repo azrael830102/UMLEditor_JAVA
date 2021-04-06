@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import UMLComponent.BasicObject.ComponentType;
+import UMLComponent.Group.GroupContainer;
 import UMLComponent.Line.BasicLineObj;
 import Utilities.CommonUse;
 import Utilities.MouseEventListener;
@@ -19,11 +21,11 @@ import Utilities.MouseEventListener;
 public class Canvas extends JPanel {
 	private static Canvas instance = null;
 	protected MouseEventListener currentMode = null;
-	
+
 	public BasicLineObj tempLine = null;
 	public Rectangle selectedArea = new Rectangle();
 	private List<BasicObject> basicObjList = new ArrayList<BasicObject>();
-	
+
 	private Canvas() {
 		this.setLayout(null);
 		this.setPreferredSize(new Dimension(1920, 1080));
@@ -63,6 +65,39 @@ public class Canvas extends JPanel {
 		return this.basicObjList;
 	}
 
+	public void grouping() {
+		GroupContainer group = new GroupContainer();
+		for(BasicObject obj : basicObjList) {
+			if(obj.isSlected()) {
+				group.addItem(obj);
+				obj.setSlected(false);
+			}
+		}
+		group.setBounds();
+		basicObjList.removeAll(group.getGroupItemList());
+		basicObjList.add(group);
+		group.setSlected(true);
+		repaint();
+	}
+	
+	public void unGrouping() {
+		GroupContainer group = null;
+		for(BasicObject obj : basicObjList) {
+			if(obj.isSlected() && obj.getComponentType().equals(ComponentType.GROUP_CONTAINER)) {
+				group = (GroupContainer) obj;
+				break;
+			}
+		}
+		if(group != null) {
+			for(BasicObject obj : group.getGroupItemList()) {
+				basicObjList.add(obj);
+				obj.setSlected(true);
+			}
+			basicObjList.remove(group);
+		}
+		repaint();
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -74,8 +109,8 @@ public class Canvas extends JPanel {
 		g.setColor(Color.white);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(1));
-		
-		if(tempLine != null) {
+
+		if (tempLine != null) {
 			tempLine.paint(g);
 		}
 		if (!basicObjList.isEmpty()) {
@@ -86,8 +121,7 @@ public class Canvas extends JPanel {
 		if (!selectedArea.isEmpty()) {
 			g.setColor(CommonUse.SELECTED_AREA_COLOR);
 			Graphics2D g2d = (Graphics2D) g;
-			float dash[] = { 5.0f };
-			g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+			g2d.setStroke(CommonUse.SELECT_AREA_STROKE);
 			g2d.drawRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
 			g2d.setColor(Color.BLACK);
 		}

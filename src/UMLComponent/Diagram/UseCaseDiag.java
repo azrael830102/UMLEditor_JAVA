@@ -33,8 +33,7 @@ public class UseCaseDiag extends BasicDiagramObj {
 		g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
 		Graphics2D g2d = (Graphics2D) g;
-		float dash[] = { 10.0f };
-		g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+		g2d.setStroke(CommonUse.USE_CASE_DIAG_STROKE);
 		g2d.setColor(Color.black);
 		g2d.drawOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		g.setColor(Color.BLACK);

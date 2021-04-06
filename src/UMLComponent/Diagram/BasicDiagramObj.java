@@ -28,8 +28,8 @@ public abstract class BasicDiagramObj extends JPanel implements BasicObject {
 		ports = Port.createPorts(this);
 	}
 	@Override
-	public boolean isDiagram() {
-		return true;
+	public ComponentType getComponentType() {
+		return ComponentType.DIAGRAM;
 	}
 	@Override
 	public boolean isSlected() {

@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import UMLComponent.BasicObject;
+import UMLComponent.BasicObject.ComponentType;
 import UMLComponent.Port;
 import UMLComponent.Port.DiagPortCode;
 import UMLComponent.Port.LinePortCode;
@@ -46,7 +47,7 @@ public abstract class BasicLineMode extends MouseEventListener{
 	}
 	protected Point findDiagramToConnect(Point p, LinePortCode linePort) {
 		for (BasicObject basicObj : basicObjList) {
-			if (basicObj.isDiagram() && basicObj.checkSelected(p)) {
+			if (basicObj.getComponentType().equals(ComponentType.DIAGRAM) && basicObj.checkSelected(p)) {
 				if(linePort.equals(LinePortCode.START_POINT)) {
 					diagObj_1st = basicObj;
 					diagObjPort_1st = getTargetPortToConnect(p, basicObj);
