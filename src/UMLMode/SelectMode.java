@@ -32,10 +32,15 @@ public class SelectMode extends MouseEventListener {
 		}
 
 		// see is any item is selected
-		for (int i = basicObjList.size() - 1; i >= 0; i--) {
-			if (basicObjList.get(i).checkSelected(startPoint)) {
-				basicObjList.get(i).setSlected(true);
-				break;
+		if (tmpSelectedArea.isEmpty()) {
+			boolean noItemSelected = true;
+			for (int i = basicObjList.size() - 1; i >= 0; i--) {
+				if (noItemSelected && basicObjList.get(i).checkSelected(startPoint)) {
+					basicObjList.get(i).setSlected(true);
+					noItemSelected = false;
+				} else {
+					basicObjList.get(i).setSlected(false);
+				}
 			}
 		}
 
@@ -99,7 +104,7 @@ public class SelectMode extends MouseEventListener {
 
 		// let select area invisible, so the canvas is clean
 		canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
-		if(!canvas.selectedArea.isEmpty()) {
+		if (!canvas.selectedArea.isEmpty()) {
 			tmpSelectedArea = getSelectedItemCoverage();
 			canvas.selectedArea.setBounds(0, 0, 0, 0);
 		}
