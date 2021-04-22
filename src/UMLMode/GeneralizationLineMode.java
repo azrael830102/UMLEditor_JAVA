@@ -15,7 +15,7 @@ public class GeneralizationLineMode extends BasicLineMode {
 	public void mouseDragged(MouseEvent e) {
 		/* show dragged line */
 		if (startPoint != null) {
-			canvas.tempLine = new GeneralizationLine(startPoint, e.getPoint());
+			canvas.setTempLine(new GeneralizationLine(startPoint, e.getPoint()));
 			canvas.repaint();
 		}
 	}

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import UMLComponent.BasicObject;
 import UMLComponent.BasicObject.ComponentType;
 import UMLComponent.Port;
+import UMLComponent.Group.GroupContainer;
 import UMLComponent.Line.BasicLineObj;
 import Utilities.MouseEventListener;
 
@@ -19,16 +20,18 @@ public class SelectMode extends MouseEventListener {
 	Rectangle tmpSelectedArea = new Rectangle();
 	private List<BasicObject> basicObjList;
 	Logger logger = Logger.getLogger(SelectMode.class);
-
+	
+	public SelectMode() {
+		basicObjList = canvas.getBasicObjList();
+	}
 	@Override
 	public void mousePressed(MouseEvent e) {
 		startPoint = e.getPoint();
-		basicObjList = canvas.getBasicObjList();
 		// reset the canvas; If mouse is pressed on the selectArea, don't reset(for
 		// dragging items)
 		if (tmpSelectedArea != null && !tmpSelectedArea.contains(startPoint)) {
 			canvas.reset();
-			tmpSelectedArea = canvas.selectedArea.getBounds();
+			tmpSelectedArea = canvas.getSelectedArea().getBounds();
 		}
 
 		// see is any item is selected
@@ -67,15 +70,15 @@ public class SelectMode extends MouseEventListener {
 					}
 				}
 			}
-			canvas.selectedArea.setLocation((int) (canvas.selectedArea.getX() + moveX),
-					(int) (canvas.selectedArea.getY() + moveY));
+			canvas.getSelectedArea().setLocation((int) (canvas.getSelectedArea().getX() + moveX),
+					(int) (canvas.getSelectedArea().getY() + moveY));
 			startPoint.x = e.getX();
 			startPoint.y = e.getY();
 		} else {
 			if (e.getX() > startPoint.x)
-				canvas.selectedArea.setBounds(startPoint.x, startPoint.y, moveX, moveY);
+				canvas.getSelectedArea().setBounds(startPoint.x, startPoint.y, moveX, moveY);
 			else
-				canvas.selectedArea.setBounds(e.getX(), e.getY(), Math.abs(moveX), Math.abs(moveY));
+				canvas.getSelectedArea().setBounds(e.getX(), e.getY(), Math.abs(moveX), Math.abs(moveY));
 
 			for (BasicObject obj : basicObjList) {
 				if (checkSelectedArea(obj)) {
@@ -98,10 +101,10 @@ public class SelectMode extends MouseEventListener {
 		}
 
 		// let select area invisible, so the canvas is clean
-		canvas.selectedArea.setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
-		if(!canvas.selectedArea.isEmpty()) {
+		canvas.getSelectedArea().setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
+		if(!canvas.getSelectedArea().isEmpty()) {
 			tmpSelectedArea = getSelectedItemCoverage();
-			canvas.selectedArea.setBounds(0, 0, 0, 0);
+			canvas.getSelectedArea().setBounds(0, 0, 0, 0);
 		}
 		canvas.repaint();
 	}
@@ -150,9 +153,42 @@ public class SelectMode extends MouseEventListener {
 		Point upperleft = new Point(obj.getX1(), obj.getY1());
 		Point lowerright = new Point(obj.getX2(), obj.getY2());
 		/* show ports of selected objects */
-		if (canvas.selectedArea.contains(upperleft) && canvas.selectedArea.contains(lowerright)) {
+		if (canvas.getSelectedArea().contains(upperleft) && canvas.getSelectedArea().contains(lowerright)) {
 			return true;
 		}
 		return false;
+	}
+	
+	public void grouping() {
+		GroupContainer group = new GroupContainer();
+		for (BasicObject obj : basicObjList) {
+			if (obj.isSlected()) {
+				group.addItem(obj);
+				obj.setSlected(false);
+			}
+		}
+		group.setBounds();
+		basicObjList.removeAll(group.getGroupItemList());
+		basicObjList.add(group);
+		group.setSlected(true);
+		canvas.repaint();
+	}
+
+	public void unGrouping() {
+		GroupContainer group = null;
+		for (BasicObject obj : basicObjList) {
+			if (obj.isSlected() && obj.getComponentType().equals(ComponentType.GROUP_CONTAINER)) {
+				group = (GroupContainer) obj;
+				break;
+			}
+		}
+		if (group != null) {
+			for (BasicObject obj : group.getGroupItemList()) {
+				basicObjList.add(obj);
+				obj.setSlected(true);
+			}
+			basicObjList.remove(group);
+		}
+		canvas.repaint();
 	}
 }

@@ -23,6 +23,7 @@ import UMLComponent.BasicObject;
 import UMLComponent.BasicObject.ComponentType;
 import UMLComponent.Canvas;
 import UMLComponent.Diagram.BasicDiagramObj;
+import UMLMode.SelectMode;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -58,11 +59,11 @@ public class MenuBar extends JMenuBar {
 				break;
 			case GROUP:
 				logger.debug("Group");
-				canvas.grouping();
+				new SelectMode().grouping();
 				break;
 			case UNGROUP:
 				logger.debug("Ungroup");
-				canvas.unGrouping();
+				new SelectMode().unGrouping();
 				break;
 			}
 

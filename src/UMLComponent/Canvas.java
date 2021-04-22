@@ -11,8 +11,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import UMLComponent.BasicObject.ComponentType;
-import UMLComponent.Group.GroupContainer;
 import UMLComponent.Line.BasicLineObj;
 import Utilities.CommonUse;
 import Utilities.MouseEventListener;
@@ -22,8 +20,8 @@ public class Canvas extends JPanel {
 	private static Canvas instance = null;
 	protected MouseEventListener currentMode = null;
 
-	public BasicLineObj tempLine = null;
-	public Rectangle selectedArea = new Rectangle();
+	private BasicLineObj tempLine = null;
+	private Rectangle selectedArea = new Rectangle();
 	private List<BasicObject> basicObjList = new ArrayList<BasicObject>();
 
 	private Canvas() {
@@ -36,6 +34,22 @@ public class Canvas extends JPanel {
 			instance = new Canvas();
 		}
 		return instance;
+	}
+
+	public BasicLineObj getTempLine() {
+		return tempLine;
+	}
+
+	public void setTempLine(BasicLineObj line) {
+		tempLine = line;
+	}
+
+	public Rectangle getSelectedArea() {
+		return selectedArea;
+	}
+
+	public void setSelectedArea(Rectangle selectedArea) {
+		this.selectedArea = selectedArea;
 	}
 
 	public void reset() {
@@ -63,39 +77,6 @@ public class Canvas extends JPanel {
 
 	public List<BasicObject> getBasicObjList() {
 		return this.basicObjList;
-	}
-
-	public void grouping() {
-		GroupContainer group = new GroupContainer();
-		for(BasicObject obj : basicObjList) {
-			if(obj.isSlected()) {
-				group.addItem(obj);
-				obj.setSlected(false);
-			}
-		}
-		group.setBounds();
-		basicObjList.removeAll(group.getGroupItemList());
-		basicObjList.add(group);
-		group.setSlected(true);
-		repaint();
-	}
-	
-	public void unGrouping() {
-		GroupContainer group = null;
-		for(BasicObject obj : basicObjList) {
-			if(obj.isSlected() && obj.getComponentType().equals(ComponentType.GROUP_CONTAINER)) {
-				group = (GroupContainer) obj;
-				break;
-			}
-		}
-		if(group != null) {
-			for(BasicObject obj : group.getGroupItemList()) {
-				basicObjList.add(obj);
-				obj.setSlected(true);
-			}
-			basicObjList.remove(group);
-		}
-		repaint();
 	}
 
 	@Override

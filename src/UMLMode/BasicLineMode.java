@@ -41,10 +41,11 @@ public abstract class BasicLineMode extends MouseEventListener{
 	 * Don't use it indiscriminately
 	 * */
 	protected void resetForMouseReleasedEvent() {
-		canvas.tempLine = null;
+		canvas.setTempLine(null);
 		canvas.repaint();
 		startPoint = null;
 	}
+	
 	protected Point findDiagramToConnect(Point p, LinePortCode linePort) {
 		for (BasicObject basicObj : basicObjList) {
 			if (basicObj.getComponentType().equals(ComponentType.DIAGRAM) && basicObj.checkSelected(p)) {

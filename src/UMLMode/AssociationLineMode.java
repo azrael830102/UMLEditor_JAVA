@@ -15,7 +15,7 @@ public class AssociationLineMode extends BasicLineMode {
 	public void mouseDragged(MouseEvent e) {
 		/* show dragged line */
 		if (startPoint != null) {
-			canvas.tempLine = new AssociationLine(startPoint, e.getPoint());
+			canvas.setTempLine(new AssociationLine(startPoint, e.getPoint()));  
 			canvas.repaint();
 		}
 	}

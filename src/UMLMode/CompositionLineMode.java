@@ -15,7 +15,7 @@ public class CompositionLineMode extends BasicLineMode {
 	public void mouseDragged(MouseEvent e) {
 		/* show dragged line */
 		if (startPoint != null) {
-			canvas.tempLine = new CompositionLine(startPoint, e.getPoint());
+			canvas.setTempLine(new CompositionLine(startPoint, e.getPoint())); 
 			canvas.repaint();
 		}
 	}
