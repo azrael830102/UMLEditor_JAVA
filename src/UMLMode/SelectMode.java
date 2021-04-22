@@ -20,10 +20,11 @@ public class SelectMode extends MouseEventListener {
 	Rectangle tmpSelectedArea = new Rectangle();
 	private List<BasicObject> basicObjList;
 	Logger logger = Logger.getLogger(SelectMode.class);
-	
+
 	public SelectMode() {
 		basicObjList = canvas.getBasicObjList();
 	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		startPoint = e.getPoint();
@@ -102,7 +103,7 @@ public class SelectMode extends MouseEventListener {
 
 		// let select area invisible, so the canvas is clean
 		canvas.getSelectedArea().setSize(Math.abs(e.getX() - startPoint.x), Math.abs(e.getY() - startPoint.y));
-		if(!canvas.getSelectedArea().isEmpty()) {
+		if (!canvas.getSelectedArea().isEmpty()) {
 			tmpSelectedArea = getSelectedItemCoverage();
 			canvas.getSelectedArea().setBounds(0, 0, 0, 0);
 		}
@@ -158,7 +159,7 @@ public class SelectMode extends MouseEventListener {
 		}
 		return false;
 	}
-	
+
 	public void grouping() {
 		GroupContainer group = new GroupContainer();
 		for (BasicObject obj : basicObjList) {
